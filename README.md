@@ -1,5 +1,5 @@
 # LeprechaunsSpendings
-A tool for managing family budget
+A tool for managing family budget. Users should be able to report spendings via the apps, and at the end of the sprint they should be able to calculate how much money should be transfered between the users in order to divide the spedings equally.
 
 # Backend implementation
 The first requirement for the backend app includes following operations:
