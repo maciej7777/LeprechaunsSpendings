@@ -1,7 +1,6 @@
 package com.hacktoberfest.leprechaunsspendings.spending.service;
 
 import com.hacktoberfest.leprechaunsspendings.spending.model.Spending;
-import org.javamoney.moneta.Money;
 
 public class SpendingMapper {
     public static Spending mapSpending(SpendingDTO spendingDTO) {
