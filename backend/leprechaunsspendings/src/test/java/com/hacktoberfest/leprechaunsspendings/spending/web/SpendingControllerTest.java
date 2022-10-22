@@ -78,4 +78,22 @@ class SpendingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.['money.amount']", Is.is("Amount must be provided")));
 
     }
+
+    @Test
+    public void whenPostSpendingWithInvalidAmount_thenExceptionIsReturned() throws Exception {
+        String spending = "{" +
+                "\"author\": \"Mac\"," +
+                "\"spendingType\": \"FOOD\"," +
+                "\"money\": {\"amount\":\"0.00\",\"currency\":\"EUR\"}," +
+                "\"title\": \"beer\"," +
+                "\"description\": \"beer\"," +
+                "\"date\": \"2022-10-15\"" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/spendings")
+                        .content(spending)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.['money.amount']", Is.is("Spending must be greater then 0")));
+        ;
+    }
 }
