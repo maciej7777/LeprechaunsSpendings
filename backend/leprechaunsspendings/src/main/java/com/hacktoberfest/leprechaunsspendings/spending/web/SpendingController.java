@@ -2,12 +2,11 @@ package com.hacktoberfest.leprechaunsspendings.spending.web;
 
 import com.hacktoberfest.leprechaunsspendings.spending.service.SpendingDTO;
 import com.hacktoberfest.leprechaunsspendings.spending.service.SpendingService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.hacktoberfest.leprechaunsspendings.spending.web.exceptions.SpendingNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/spendings")
@@ -19,7 +18,12 @@ public class SpendingController {
     }
 
     @PostMapping
-    public void createSaving(@Valid @RequestBody SpendingDTO spending) {
-        spendingService.createSpending(spending);
+    public SpendingDTO createSaving(@Valid @RequestBody SpendingDTO spending) {
+        return spendingService.createSpending(spending);
+    }
+
+    @GetMapping("/{spendingId}")
+    public SpendingDTO getSaving(@Valid @PathVariable UUID spendingId) throws SpendingNotFoundException {
+        return spendingService.getSpending(spendingId);
     }
 }

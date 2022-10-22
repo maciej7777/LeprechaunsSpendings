@@ -11,6 +11,11 @@ public class MoneyDTO {
     @NotNull(message = "Currency must be provided")
     private String currency;
 
+    public MoneyDTO(BigDecimal amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }
