@@ -32,6 +32,38 @@ public class Spending {
         this.date = date;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public SpendingType getSpendingType() {
+        return spendingType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
     public static class Builder {
         private String author;
         private BigDecimal amount;
@@ -50,7 +82,7 @@ public class Spending {
             return this;
         }
 
-        public Builder withAmount(BigDecimal money) {
+        public Builder withAmount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }

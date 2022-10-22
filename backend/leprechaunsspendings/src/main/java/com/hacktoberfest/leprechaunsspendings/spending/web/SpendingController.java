@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/spendings")
 public class SpendingController {
@@ -17,7 +19,7 @@ public class SpendingController {
     }
 
     @PostMapping
-    public void createSaving(@RequestBody SpendingDTO spending) {
+    public void createSaving(@Valid @RequestBody SpendingDTO spending) {
         spendingService.createSpending(spending);
     }
 }
