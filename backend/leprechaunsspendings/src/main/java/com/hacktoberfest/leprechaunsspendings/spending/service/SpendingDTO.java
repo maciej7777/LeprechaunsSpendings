@@ -1,16 +1,23 @@
 package com.hacktoberfest.leprechaunsspendings.spending.service;
 
-import com.hacktoberfest.leprechaunsspendings.spending.model.Money;
 import com.hacktoberfest.leprechaunsspendings.spending.model.SpendingType;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class SpendingDTO {
+    @NotBlank(message = "Author must be provided")
     private String author;
-    private Money money;
+    @NotNull(message = "Amount and currency must be provided")
+    @Valid
+    private MoneyDTO money;
+    @NotNull(message = "Spending type must be provided")
     private SpendingType spendingType;
     private String title;
     private String description;
+    @NotNull(message = "Date must be provided")
     private Date date;
 
     public String getAuthor() {
@@ -21,11 +28,11 @@ public class SpendingDTO {
         this.author = author;
     }
 
-    public Money getMoney() {
+    public MoneyDTO getMoney() {
         return money;
     }
 
-    public void setMoney(Money money) {
+    public void setMoney(MoneyDTO money) {
         this.money = money;
     }
 

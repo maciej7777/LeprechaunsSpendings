@@ -1,10 +1,14 @@
-package com.hacktoberfest.leprechaunsspendings.spending.model;
+package com.hacktoberfest.leprechaunsspendings.spending.service;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class Money {
+public class MoneyDTO {
+    @NotNull(message = "Amount must be provided")
+    @DecimalMin(value = "0", inclusive = false, message = "Spending must be greater then 0")
     private BigDecimal amount;
+    @NotNull(message = "Currency must be provided")
     private String currency;
 
     public BigDecimal getAmount() {
