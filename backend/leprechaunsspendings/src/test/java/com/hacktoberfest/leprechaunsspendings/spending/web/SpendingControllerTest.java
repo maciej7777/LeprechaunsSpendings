@@ -12,6 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @WebMvcTest
 @AutoConfigureMockMvc
 class SpendingControllerTest {
@@ -80,20 +83,22 @@ class SpendingControllerTest {
     }
 
     @Test
-    public void whenPostSpendingWithInvalidAmount_thenExceptionIsReturned() throws Exception {
+    public void whenPostSpendingWithInvalidDate_thenExceptionIsReturned() throws Exception {
+        LocalDate dateFromTheFuture = LocalDate.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = dateFromTheFuture.format(formatter);
         String spending = "{" +
                 "\"author\": \"Mac\"," +
                 "\"spendingType\": \"FOOD\"," +
-                "\"money\": {\"amount\":\"0.00\",\"currency\":\"EUR\"}," +
+                "\"money\": {\"amount\":\"100.00\",\"currency\":\"EUR\"}," +
                 "\"title\": \"beer\"," +
                 "\"description\": \"beer\"," +
-                "\"date\": \"2022-10-15\"" +
+                "\"date\": \"" + date + "\"" +
                 "}";
         mockMvc.perform(MockMvcRequestBuilders.post("/spendings")
                         .content(spending)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.['money.amount']", Is.is("Spending must be greater then 0")));
-        ;
+                .andExpect(MockMvcResultMatchers.jsonPath("$.date", Is.is("Date must not be from the future")));
     }
 }

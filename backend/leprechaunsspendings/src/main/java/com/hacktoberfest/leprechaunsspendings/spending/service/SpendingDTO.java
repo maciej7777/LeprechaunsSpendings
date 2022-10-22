@@ -5,6 +5,7 @@ import com.hacktoberfest.leprechaunsspendings.spending.model.SpendingType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
 
 public class SpendingDTO {
@@ -18,6 +19,7 @@ public class SpendingDTO {
     private String title;
     private String description;
     @NotNull(message = "Date must be provided")
+    @PastOrPresent(message = "Date must not be from the future")
     private Date date;
 
     public String getAuthor() {

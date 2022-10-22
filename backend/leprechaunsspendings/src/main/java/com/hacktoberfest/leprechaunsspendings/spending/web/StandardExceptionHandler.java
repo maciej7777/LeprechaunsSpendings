@@ -19,12 +19,14 @@ public class StandardExceptionHandler {
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
             MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
-        exception.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<Map<String, String>>(errors, HttpStatus.BAD_REQUEST);
+        exception.getBindingResult()
+                .getAllErrors()
+                .forEach((error) -> {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    errors.put(fieldName, errorMessage);
+                });
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
 }
