@@ -1,6 +1,7 @@
 package com.hacktoberfest.leprechaunsspendings.spending.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,8 +12,9 @@ import java.util.UUID;
 public class Spending {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
     private String author;
     private BigDecimal amount;
@@ -21,6 +23,10 @@ public class Spending {
     private String title;
     private String description;
     private Date date;
+
+    private Spending() {
+
+    }
 
     private Spending(String author, BigDecimal amount, String currency, SpendingType spendingType, String title, String description, Date date) {
         this.author = author;

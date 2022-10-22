@@ -4,6 +4,7 @@ import com.hacktoberfest.leprechaunsspendings.spending.model.SpendingType;
 import com.hacktoberfest.leprechaunsspendings.spending.service.MoneyDTO;
 import com.hacktoberfest.leprechaunsspendings.spending.service.SpendingDTO;
 import com.hacktoberfest.leprechaunsspendings.spending.service.SpendingService;
+import com.hacktoberfest.leprechaunsspendings.spending.web.exceptions.SpendingNotFoundException;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -51,7 +52,7 @@ class SpendingControllerTest {
 
     @Test
     public void whenPostValidSpending_thenCorrectResponse() throws Exception {
-        setupSpendingServiceResponse();
+        setupPostSpendingServiceResponse();
         String spending = "{" +
                 "\"author\": \"" + SPENDING_AUTHOR + "\"," +
                 "\"spendingType\": \"" + SPENDING_TYPE + "\"," +
@@ -74,7 +75,7 @@ class SpendingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.date", Is.is(SPENDING_DATE.format(SPENDING_DATE_TIME_FORMATTER))));
     }
 
-    private void setupSpendingServiceResponse() {
+    private void setupPostSpendingServiceResponse() {
         SpendingDTO serviceResponse = SpendingDTO.Builder.create()
                 .withId(UUID.fromString(SPENDING_ID))
                 .withAuthor(SPENDING_AUTHOR)
@@ -87,6 +88,52 @@ class SpendingControllerTest {
                 .build();
 
         Mockito.when(spendingService.createSpending(any())).thenReturn(serviceResponse);
+        openMocks(this);
+    }
+
+    @Test
+    public void whenGetSpending_thenCorrectResponse() throws Exception {
+        setupGetSpendingServiceResponse();
+        mockMvc.perform(MockMvcRequestBuilders.get("/spendings/" + SPENDING_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Is.is(SPENDING_ID)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.author", Is.is(SPENDING_AUTHOR)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.spendingType", Is.is(SPENDING_TYPE.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.money.amount", Is.is(SPENDING_MONEY.getAmount().intValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.money.currency", Is.is(SPENDING_MONEY.getCurrency())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title", Is.is(SPENDING_TITLE)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", Is.is(SPENDING_DESCRIPTION)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.date", Is.is(SPENDING_DATE.format(SPENDING_DATE_TIME_FORMATTER))));
+    }
+
+    private void setupGetSpendingServiceResponse() throws SpendingNotFoundException {
+        SpendingDTO serviceResponse = SpendingDTO.Builder.create()
+                .withId(UUID.fromString(SPENDING_ID))
+                .withAuthor(SPENDING_AUTHOR)
+                .withSpendingType(SPENDING_TYPE)
+                .withAmount(SPENDING_MONEY.getAmount())
+                .withCurrency(SPENDING_MONEY.getCurrency())
+                .withTitle(SPENDING_TITLE)
+                .withDescription(SPENDING_DESCRIPTION)
+                .withDate(Date.valueOf(SPENDING_DATE))
+                .build();
+
+        Mockito.when(spendingService.getSpending(any())).thenReturn(serviceResponse);
+        openMocks(this);
+    }
+
+    @Test
+    public void whenGetNotExistingSpending_thenExceptionIsThrown() throws Exception {
+        setupGetSpendingServiceException();
+        mockMvc.perform(MockMvcRequestBuilders.get("/spendings/" + SPENDING_ID)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("Spending was not found"));
+    }
+
+    private void setupGetSpendingServiceException() throws SpendingNotFoundException {
+        Mockito.when(spendingService.getSpending(any())).thenThrow(new SpendingNotFoundException());
         openMocks(this);
     }
 

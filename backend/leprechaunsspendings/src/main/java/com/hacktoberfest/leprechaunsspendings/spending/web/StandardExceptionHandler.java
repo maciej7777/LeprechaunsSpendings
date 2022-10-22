@@ -1,5 +1,6 @@
 package com.hacktoberfest.leprechaunsspendings.spending.web;
 
+import com.hacktoberfest.leprechaunsspendings.spending.web.exceptions.SpendingNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,6 +28,12 @@ public class StandardExceptionHandler {
                     errors.put(fieldName, errorMessage);
                 });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(SpendingNotFoundException.class)
+    public ResponseEntity<String> handleSpendingNotFoundException() {
+        return new ResponseEntity<>("Spending was not found", HttpStatus.NOT_FOUND);
     }
 
 }
